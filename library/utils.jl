@@ -30,7 +30,7 @@ function truncate_to_decimal_places(number, decimal_places)
     """
     scale = 10 ^ decimal_places
     truncated_number = floor(number * scale) / scale
-    return truncated_number
+    return string(truncated_number)
 end
 
 export legendre

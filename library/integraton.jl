@@ -17,7 +17,7 @@ function simpson_rule(func, ll, ul, n=10)
     return s * h / 6
 end
 
-export find_legendre_roots
+# export find_legendre_roots
 function find_legendre_roots(n)
     roots = []
     for i in 1:n
@@ -28,6 +28,25 @@ function find_legendre_roots(n)
         end
     end
     return roots
+end
+
+export gaussian_quadrature
+function gaussian_quadrature(f, a, b, n)
+    # if n < 1 || !isa(n, Int)
+    #     throw(ArgumentError("n must be a positive integer"))
+    # end
+    
+    roots = find_legendre_roots(n)
+    
+    # Calculate the weights
+    weights = [2 / ((1 - x^2) * Utils.legendre_derivative(x, n)^2) for x in roots]
+    
+    integral = 0
+    for i in 1:n
+        integral += weights[i] * f(((b - a) * roots[i])/2 + (b + a) / 2)
+    end
+    
+    return (b - a) / 2 * integral
 end
 
 
