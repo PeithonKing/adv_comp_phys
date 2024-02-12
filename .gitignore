@@ -1,2 +1,5 @@
 comp_phys.egg-info
 .comp
+__pycache__
+.vscode
+.ipynb_checkpoints

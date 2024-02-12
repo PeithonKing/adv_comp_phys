@@ -8,6 +8,7 @@ except ImportError:
 
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import numpy as np
 
 def forward_euler(f, x, x0, y0, h=0.01):
     """Forward Euler method for solving ODEs.
@@ -116,7 +117,7 @@ def rk4(f, x, x0, y0, h=0.01):
     Returns:
         float: Approximate solution to the ODE.
     """
-    xs, ys = [], []
+    xs, ys = [x0], [y0]
     while x0 < x:
         k1 = h * f(x0, y0)
         k2 = h * f(x0 + h / 2, y0 + k1 / 2)
@@ -261,3 +262,40 @@ def heat_eq2(temp:callable, Lx:float, Nx:int, Lt:float, Nt:int, needed:int):
             else:            A[t][x] = alpha*A[t-1][x-1] + (1 - 2*alpha)*A[t-1][x] + alpha*A[t-1][x+1]
     
     return A
+
+
+def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt):
+    h = L / Nl
+    k = T / Nt
+    alpha = k / h**2
+
+    u = np.zeros((Nl + 1, Nt + 1))
+    u[:, 0] = u0
+
+    u[0, :] = 0  # mostly this is the case
+    u[Nl, :] = 0  # mostly this is the case
+
+    # preparing the A and B matrices
+    A = np.zeros((Nl-1, Nl-1))
+    B = np.zeros((Nl-1, Nl-1))
+    for i in range(Nl-1):
+        A[i, i] = 1/2 + 2 * alpha
+        B[i, i] = 1/2 - 2 * alpha
+        if i < Nl-2:
+            A[i, i+1] = -alpha
+            A[i+1, i] = -alpha
+            B[i, i+1] = alpha
+            B[i+1, i] = alpha
+
+    # inverting A
+    A_inv = np.linalg.inv(A)
+
+    b = np.zeros(Nl-1)
+    for j in range(1,Nt+1):
+        b[0]    = alpha * u[0, j-1] + alpha * u[0, j]
+        b[Nl-2] = alpha * u[Nl,j-1] + alpha * u[Nl,j]
+        v = np.dot(B, u[1:Nl, j-1])
+        u[1:(Nl),j] = np.dot(A_inv, v+b)
+    
+    return u
+

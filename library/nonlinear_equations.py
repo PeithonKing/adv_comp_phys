@@ -3,7 +3,6 @@ from math import log10
 
 from .myrandom import Random
 from .matrix import truncate_p, Matrix
-from .basic_functions import differentiate
 
 def P(x, coeff):  # Polynomial
     return sum([c*x**(len(coeff)-i-1) for i, c in enumerate(coeff)])
@@ -60,6 +59,9 @@ def solve_regula_falsi(f, guess = None, delta=1e-4, rec_depth = 0, verbose = Fal
     ret = solve_regula_falsi(f, [a, b], delta, rec_depth+1, verbose) if (abs(f(a))>delta and abs(f(b))>delta)     else res
     return ret if rec_depth else truncate_p(ret, places, str)
 
+def differentiate(f, x, epsilon = 1e-6):  # Numerical differentiation
+    return (f(x+epsilon)-f(x))/epsilon
+
 def solve_newton_raphson(f, f_d = None, guess = None, delta=1e-4, rec_depth = 0, verbose=False):
     if f_d==None:
         warnings.warn("No derivative provided, using numerical differentiation")
@@ -70,8 +72,8 @@ def solve_newton_raphson(f, f_d = None, guess = None, delta=1e-4, rec_depth = 0,
     guess = guess - f(guess)/f_d(guess)
     places = int(-log10(delta))
     if verbose:
-        print(f"step={rec_depth+1}\t  x={truncate_p(guess, places, str)}\tf(x)={truncate_p(f(guess), places, str)}")
-    return solve_newton_raphson(f, f_d, guess, delta, rec_depth+1, verbose) if (abs(f(guess))>delta) else truncate_p(guess, places, str)
+        print(f"step={rec_depth+1}\t  x={guess}\tf(x)={f(guess)}")
+    return solve_newton_raphson(f, f_d, guess, delta, rec_depth+1, verbose) if (abs(f(guess))>delta) else guess
 
 def laguerre(coeff, b = None, epsilon = 1e-6):
     if b == None:
@@ -108,3 +110,35 @@ def laguerre_solve(coeff, epsilon = 1e-6):
         coeff = deflation(coeff, roots[-1])
         # print()
     return Matrix([[truncate_p(root, int(-log10(epsilon)), str)] for root in roots], "a", int(-log10(epsilon)))
+
+
+def fixed_point_iteration(phi, x0, max_it=100, tolerance=1e-4):
+    """
+    Fixed-point iteration method for solving equations of the form x = phi(x).
+
+    Parameters:
+    - phi (function): Function defining the fixed-point iteration.
+    - x0 (float): Initial guess.
+    - max_it (int, optional): Maximum number of iterations. Defaults to 100.
+    - tolerance (float, optional): Convergence tolerance. Defaults to 1e-4.
+
+    Returns:
+    - float: Approximate solution of the equation.
+
+    Raises:
+    - AssertionError: If the derivative of the function at the fixed point is greater than or equal to 1.
+    """
+
+    assert abs(differentiate(phi, x0)) < 1, "The derivative of the function at the fixed point is greater than or equal to 1. The fixed-point iteration may not converge."
+
+    for i in range(1, max_it + 1):
+        x = phi(x0)
+        # print(f"Iteration {i}: x = {x}")
+        if abs(x - x0) < tolerance:
+            return x
+        x0 = x
+
+    return x0
+
+
+

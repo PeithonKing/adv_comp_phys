@@ -1,5 +1,6 @@
 from copy import deepcopy as copy
 from tqdm import tqdm
+import math
 
 try:
     from myrandom import Random
@@ -7,6 +8,9 @@ except:
     from library.myrandom import Random
 
 def truncate_p(var, p, form = float):
+    """
+    Deprecated: move to basic_functions.truncate_to_decimal_places()
+    """
     if isinstance(var, int): return form(var)
     # print(var)
     s = str(var)
