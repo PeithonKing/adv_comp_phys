@@ -297,5 +297,5 @@ def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt, alpha = 1):
         v = np.dot(B, u[1:Nl, j-1])
         u[1:(Nl),j] = np.dot(A_inv, v+b)
     
-    return u, alpha
+    return u.T, alpha
 
