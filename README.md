@@ -6,7 +6,7 @@
 
 | i | Assignment Question | Assignment Notebook |
 |---|----------------------|---------------------|
-| 1 | [Assignment1](assignments/assign1.pdf) | [Notebook](hws/hw1.ipynb) |
+| 1 | [Assignment1](assignments/assign1.pdf) | [Notebook](solns/asg1.ipynb) |
 
 
 <!--
