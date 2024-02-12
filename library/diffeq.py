@@ -264,10 +264,10 @@ def heat_eq2(temp:callable, Lx:float, Nx:int, Lt:float, Nt:int, needed:int):
     return A
 
 
-def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt):
+def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt, alpha = 1):
     h = L / Nl
     k = T / Nt
-    alpha = k / h**2
+    alpha = k*alpha / h**2
 
     u = np.zeros((Nl + 1, Nt + 1))
     u[:, 0] = u0
@@ -297,5 +297,5 @@ def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt):
         v = np.dot(B, u[1:Nl, j-1])
         u[1:(Nl),j] = np.dot(A_inv, v+b)
     
-    return u
+    return u, alpha
 
