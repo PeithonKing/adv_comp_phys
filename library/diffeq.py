@@ -264,7 +264,7 @@ def heat_eq2(temp:callable, Lx:float, Nx:int, Lt:float, Nt:int, needed:int):
     return A
 
 
-def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt, alpha = 1):
+def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt, alpha = 1, v = 4):
     h = L / Nl
     k = T / Nt
     alpha = k*alpha / h**2
@@ -279,8 +279,8 @@ def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt, alpha = 1):
     A = np.zeros((Nl-1, Nl-1))
     B = np.zeros((Nl-1, Nl-1))
     for i in range(Nl-1):
-        A[i, i] = 1/2 + 2 * alpha
-        B[i, i] = 1/2 - 2 * alpha
+        A[i, i] = 2/v + 2 * alpha
+        B[i, i] = 2/v - 2 * alpha
         if i < Nl-2:
             A[i, i+1] = -alpha
             A[i+1, i] = -alpha

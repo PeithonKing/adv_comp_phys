@@ -55,8 +55,7 @@ class Matrix:
         """
         self.name = name
         self.precision = precision
-        self.shape = [0, 0] if (mat == [] or mat == [[]]) else [
-            len(mat), len(mat[0])]
+        self.shape = [0, 0] if (mat == [] or mat == [[]]) else [len(mat), len(mat[0])]
         self.mat = mat if len(mat) else [[]]
 
     def __str__(self, precision: int = None):
