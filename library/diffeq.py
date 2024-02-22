@@ -233,7 +233,7 @@ def shooting_method(
 
 
 
-def heat_eq2(temp:callable, Lx:float, Nx:int, Lt:float, Nt:int, needed:int):
+def heat_eq(temp:callable, Lx:float, Nx:int, Lt:float, Nt:int, needed:int):
     """Solves the heat equation in 1D.
 
     Args:
@@ -368,22 +368,22 @@ if __name__ == "__main__":
     import numpy as np
     import matplotlib.pyplot as plt
     
-L, NL = 1, 100
-L, NT = 1, 100
-dL, dT = L/NL, L/NT
+    L, NL = 1, 100
+    L, NT = 1, 100
+    dL, dT = L/NL, L/NT
 
-u = np.zeros((NL, NL))
+    u = np.zeros((NL, NL))
 
-a = 10
-b = L/2
-c = 0.1
+    a = 10
+    b = L/2
+    c = 0.1
 
-# gaussian pulse
-gaussian = lambda x: a * np.exp(-((x - b)**2)/(2*c**2))
+    # gaussian pulse
+    gaussian = lambda x: a * np.exp(-((x - b)**2)/(2*c**2))
 
-u[0, :] = 0
-u[1, :] = 0
-u[:, 0] = gaussian(np.linspace(0, L, NL))
+    u[0, :] = 0
+    u[1, :] = 0
+    u[:, 0] = gaussian(np.linspace(0, L, NL))
 
-plt.plot(u[:, 0])
-plt.show()
+    plt.plot(u[:, 0])
+    plt.show()
