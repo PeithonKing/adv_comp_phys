@@ -1,6 +1,7 @@
 from copy import deepcopy as copy
 from tqdm import tqdm
 import math
+import numpy as np
 
 try:
     from myrandom import Random
@@ -55,8 +56,15 @@ class Matrix:
         """
         self.name = name
         self.precision = precision
-        self.shape = [0, 0] if (mat == [] or mat == [[]]) else [len(mat), len(mat[0])]
-        self.mat = mat if len(mat) else [[]]
+        if isinstance(mat, np.ndarray):
+            self.shape = list(mat.shape)
+            self.mat = mat.tolist()
+        elif mat == [] or mat == [[]]:
+            self.shape = [0, 0]
+            self.mat = [[]]
+        else:
+            self.shape = [len(mat), len(mat[0])]
+            self.mat = mat
 
     def __str__(self, precision: int = None):
         """Prints the matrix.

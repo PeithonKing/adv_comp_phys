@@ -6,6 +6,7 @@ except ImportError:
     from nonlinear_equations import solve_newton_raphson
     from myrandom import Random
 
+import copy
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import numpy as np
@@ -294,8 +295,95 @@ def crank_nicolson_heat_eqn(u0, L, T, Nl, Nt, alpha = 1, v = 4):
     for j in range(1,Nt+1):
         b[0]    = alpha * u[0, j-1] + alpha * u[0, j]
         b[Nl-2] = alpha * u[Nl,j-1] + alpha * u[Nl,j]
-        v = np.dot(B, u[1:Nl, j-1])
-        u[1:(Nl),j] = np.dot(A_inv, v+b)
+        v = B @ u[1:Nl, j-1]
+        u[1:(Nl),j] = A_inv @ (v+b)
     
     return u.T, alpha
 
+def poission_eqn(u, func, xlim=2, ylim=1):
+    u = copy.deepcopy(u.T)
+
+    N = u.shape[0]
+    h = ylim / (N - 1)
+    x = np.linspace(0, xlim, N)
+    y = np.linspace(0, ylim, N)
+
+    N2 = (N-1)**2
+    A=np.zeros((N2, N2))
+    coo = lambda i, j, N: i * N + j
+    for i in range(N-1):
+        for j in range(N-1):
+
+            this = coo(i, j, N-1)
+            A[this, this] = 4  # self
+
+            if i > 0:
+                A[this, coo(i-1, j, N-1)] = -1  # Left
+            if i < N-2:
+                A[this, coo(i+1, j, N-1)] = -1  # Right
+            if j > 0:
+                A[this, coo(i, j-1, N-1)] = -1  # Up
+            if j < N-2:
+                A[this, coo(i, j+1, N-1)] = -1  # Down
+
+    r = np.zeros(N2)
+    # vector r      
+    for i in range(N-1):
+        for j in range(N-1):           
+            r[i+(N-1)*j] = (h**2) * func(x[i+1], y[j+1])
+
+    # Boundary
+    b_bottom_top=np.zeros(N2)
+    for i in range(0,N-1):
+        b_bottom_top[i]= x[i+1] #Bottom Boundary
+        b_bottom_top[i+(N-1)*(N-2)] = x[i+1] * np.e# Top Boundary
+
+    b_left_right=np.zeros(N2)
+    for j in range(0, N-1):
+        b_left_right[(N-1)*j] = 0 # Left Boundary
+        b_left_right[N-2+(N-1)*j] = 2*np.exp(y[j+1])# Right Boundary
+
+    b = b_left_right + b_bottom_top
+
+    C = np.linalg.inv(A) @ (b - r)
+
+    u[1:N, 1:N] = C.reshape((N-1, N-1))
+    return u
+
+def wave_eqn(u, delta_t=0.1, delta_x=0.1):
+    h = delta_t/delta_x
+    u = copy.deepcopy(u)
+    Nx = u.shape[0]
+    Nt = u.shape[1]
+    
+    u[1:Nx-1, 1] = u[1:Nx-1, 0] + (h**2)/2 * (u[0:Nx-2, 0] - 2*u[1:Nx-1, 0] + u[2:Nx, 0])
+    
+    for k in range(2, Nt):
+        u[1:Nx-1, k] = 2 * u[1:Nx-1, k-1] - u[1:Nx-1, k-2] + (h**2) * (u[0:Nx-2, k-1] - 2*u[1:Nx-1, k-1] + u[2:Nx, k-1])
+    
+    return u
+
+
+if __name__ == "__main__":
+    import numpy as np
+    import matplotlib.pyplot as plt
+    
+L, NL = 1, 100
+L, NT = 1, 100
+dL, dT = L/NL, L/NT
+
+u = np.zeros((NL, NL))
+
+a = 10
+b = L/2
+c = 0.1
+
+# gaussian pulse
+gaussian = lambda x: a * np.exp(-((x - b)**2)/(2*c**2))
+
+u[0, :] = 0
+u[1, :] = 0
+u[:, 0] = gaussian(np.linspace(0, L, NL))
+
+plt.plot(u[:, 0])
+plt.show()
