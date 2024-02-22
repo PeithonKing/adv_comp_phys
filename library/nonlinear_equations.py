@@ -46,6 +46,7 @@ def solve_bisection(f, guess = None, epsilon = 1e-4, delta=1e-4, rec_depth=0, ve
     return truncate_p([a, b][abs(f(a))>abs(f(b))], places, str) if (abs(a-b) < epsilon or abs(f(a))<delta or abs(f(b))<delta) else solve_bisection(f, [a, b], epsilon, delta, rec_depth+1, verbose)
 
 def solve_regula_falsi(f, guess = None, delta=1e-4, rec_depth = 0, verbose = False):
+    # print(f"rf: step={rec_depth+1}")
     a, b = get_brackets(f, guess)
     c = a + (b-a)*abs(f(a))/(abs(f(a))+abs(f(b)))
     if f(a)*f(c) > 0: a = c
@@ -63,6 +64,7 @@ def differentiate(f, x, epsilon = 1e-6):  # Numerical differentiation
     return (f(x+epsilon)-f(x))/epsilon
 
 def solve_newton_raphson(f, f_d = None, guess = None, delta=1e-4, rec_depth = 0, verbose=False):
+    # print(f"nr: step={rec_depth+1}")
     if f_d==None:
         warnings.warn("No derivative provided, using numerical differentiation")
         f_d = lambda x: differentiate(f, x)
