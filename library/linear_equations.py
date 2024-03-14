@@ -20,10 +20,10 @@ def gauss_jordan(A:Matrix, B:Matrix, verbose:bool=False):
     """
     A.augment(B)
     for imp in range(A.shape[0]):
-        print(f"working with row {imp}") if verbose else None
+        if verbose: print(f"working with row {imp}") 
         if A.mat[imp][imp] == 0:
             try: A.pivot(imp)
-            except: raise ValueError("Can't do Gauss-Jordan")
+            except: raise ValueError("Can't do Gauss-Jordan; Try rearranging the rows.")
 
         A[imp] = A[imp] / A.mat[imp][imp]
 
@@ -86,8 +86,8 @@ def LU_Decomposition(A):
     for i in range(1, n):
         for j in range(i):
             if LU.mat[j][j] == 0:
-                try:A.pivot(j)
-                except:raise ValueError("Can't do LU decomposition")
+                try: A.pivot(j)
+                except:raise ValueError("Can't do LU decomposition; Try rearranging the rows.")
             LU[i, j] = (LU[i, j] - LU[i, :j] @ LU[:j, j]) / LU[j, j]
         LU[i, i:] = LU[i, i:] - LU[i, :i] @ LU[:i, i:]
 
