@@ -7,6 +7,8 @@ except:
 
 from copy import deepcopy as copy
 
+import numpy as np
+
 def gauss_jordan(A:Matrix, B:Matrix, verbose:bool=False):
     """Perform Gauss-Jordan elimination on the augmented matrix [A|B]
 
@@ -18,6 +20,7 @@ def gauss_jordan(A:Matrix, B:Matrix, verbose:bool=False):
     Returns:
         Matrix: The solution column matrix.
     """
+
     A.augment(B)
     for imp in range(A.shape[0]):
         if verbose: print(f"working with row {imp}") 
@@ -210,6 +213,53 @@ def make_diag_dominant(A, B):
         A.swap_rows(i, ind, False)
         B.swap_rows(i, ind, False)
     return A, B
+
+def conjugate_gradient(A, b, x0, tol=1e-6, max_iter=None):
+    """
+    Solve the linear system Ax = b using the conjugate gradient method.
+
+    Parameters:
+    A : numpy.ndarray
+        Coefficient matrix of shape (n, n).
+    b : numpy.ndarray
+        Right-hand side vector of shape (n,).
+    x0 : numpy.ndarray
+        Initial guess for the solution vector of shape (n,).
+    tol : float, optional
+        Tolerance for convergence. Default is 1e-6.
+    max_iter : int, optional
+        Maximum number of iterations. Default is None (no limit).
+
+    Returns:
+    x : numpy.ndarray
+        Solution vector.
+    iter_count : int
+        Number of iterations performed.
+    """
+
+    n = len(b)
+    x = x0.copy()
+    r = b - np.dot(A, x)
+    p = r.copy()
+    iter_count = 0
+
+    while True:
+        iter_count += 1
+        Ap = np.dot(A, p)
+        alpha = np.dot(r.T, r) / np.dot(p.T, Ap)
+        x += alpha * p
+        r_next = r - alpha * Ap
+        if np.linalg.norm(r_next) < tol:
+            break
+        beta = np.dot(r_next.T, r_next) / np.dot(r.T, r)
+        p = r_next + beta * p
+        r = r_next
+
+        if max_iter is not None and iter_count >= max_iter:
+            break
+
+    return x, iter_count
+
 
 
 if __name__ == "__main__":
