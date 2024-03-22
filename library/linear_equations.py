@@ -242,6 +242,8 @@ def conjugate_gradient(A, b, x0, tol=1e-6, max_iter=None):
     r = b - np.dot(A, x)
     p = r.copy()
     iter_count = 0
+    
+    residues = []
 
     while True:
         iter_count += 1
@@ -249,6 +251,7 @@ def conjugate_gradient(A, b, x0, tol=1e-6, max_iter=None):
         alpha = np.dot(r.T, r) / np.dot(p.T, Ap)
         x += alpha * p
         r_next = r - alpha * Ap
+        residues.append(np.linalg.norm(r_next))
         if np.linalg.norm(r_next) < tol:
             break
         beta = np.dot(r_next.T, r_next) / np.dot(r.T, r)
@@ -258,7 +261,7 @@ def conjugate_gradient(A, b, x0, tol=1e-6, max_iter=None):
         if max_iter is not None and iter_count >= max_iter:
             break
 
-    return x, iter_count
+    return x, iter_count, residues
 
 
 
