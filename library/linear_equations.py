@@ -236,6 +236,8 @@ def conjugate_gradient(A, b, x0, tol=1e-6, max_iter=None):
     iter_count : int
         Number of iterations performed.
     """
+    
+    A = copy(A)
 
     n = len(b)
     x = x0.copy()
