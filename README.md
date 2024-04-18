@@ -4,18 +4,10 @@
 
 ## Assignments
 
-| i | Assignment Question | Assignment Notebook |
-|---|----------------------|---------------------|
+| | Assignment Questions | Assignment Solutions |
+|---|---|---|
 | 1 | [Assignment1](assignments/assign1.pdf) | [Notebook](solns/asg1.ipynb) |
-
-
-<!--
-
-## Exams and Projects
-
-- [**Midsem Exam**](midsem.ipynb)
-- [**DIY Project**](DIY%20Project/main.pdf)
-- [**Endsem Exam**](endsem.ipynb)
-
--->
+| 2 | [Assignment2](assignments/assign2.pdf) | [Notebook](solns/asg2.ipynb) |
+| 3 | [Assignment3](assignments/assign3.pdf), [Data](assignments/assign3fit.txt) | [Notebook](solns/asg3.ipynb) |
+| 4 | [Assignment4](assignments/assign4.pdf) | [Notebook](solns/asg4.ipynb) |
 
