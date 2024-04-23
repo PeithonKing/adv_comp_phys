@@ -11,3 +11,7 @@
 | 3 | [Assignment3](assignments/assign3.pdf), [Data](assignments/assign3fit.txt) | [Notebook](solns/asg3.ipynb) |
 | 4 | [Assignment4](assignments/assign4.pdf) | [Notebook](solns/asg4.ipynb) |
 
+## Term Project
+
+- [Project Report](project/report.pdf)
+- [Slides](project/slides.html)
