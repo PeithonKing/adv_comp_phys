@@ -83,8 +83,8 @@ def polynomial_fit(x, y, n):  # old function, don't use
 
 def mypolyfit(x_, y, basis=None, sigma=None, degree=1):
     degree += 1
-    if sigma==None: sigma = np.ones(len(y))
-    if basis == None:
+    if sigma is None: sigma = np.ones(len(y))
+    if basis is None:
         def funcs(d): return lambda x: x**d
         basis = [funcs(i) for i in range(degree)]
     else:
