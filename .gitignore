@@ -4,3 +4,5 @@ __pycache__
 .vscode
 .ipynb_checkpoints
 assign_1_python.ipynb
+*.npy
+*.hdf5

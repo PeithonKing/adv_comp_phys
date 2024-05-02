@@ -21,7 +21,7 @@ def power_method(matrix, tolerance=1e-6, max_iterations=100, seed=21):
 
     return e_val, evec_new, i
 
-def power_method_n(matrix, n, tolerance=1e-6, max_iterations=100, seed=21):
+def power_method_n(matrix, n=1, tolerance=1e-6, max_iterations=100, seed=21):
     matrix = matrix.copy()
     eigenvalues = []
     eigenvectors = []
